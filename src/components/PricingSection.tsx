@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Shield } from "lucide-react";
 
@@ -95,6 +95,23 @@ const PricingSection = ({
     },
   };
 
+  // Auto-reset countdown timer every 24 hours
+  const [countdownEndDate, setCountdownEndDate] = useState<Date>(
+    new Date(Date.now() + 24 * 60 * 60 * 1000),
+  );
+
+  useEffect(() => {
+    // Reset the countdown every 24 hours
+    const resetInterval = setInterval(
+      () => {
+        setCountdownEndDate(new Date(Date.now() + 24 * 60 * 60 * 1000));
+      },
+      24 * 60 * 60 * 1000,
+    );
+
+    return () => clearInterval(resetInterval);
+  }, []);
+
   return (
     <section className="py-20 px-4 md:px-8 bg-gray-50 dark:bg-gray-900 w-full">
       <div className="max-w-7xl mx-auto">
@@ -125,7 +142,10 @@ const PricingSection = ({
           <CountdownTimer
             title="Limited Time Offer"
             description="Get 30% off any plan when you sign up today!"
-            endDate={new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)}
+            endDate={countdownEndDate}
+            onComplete={() =>
+              setCountdownEndDate(new Date(Date.now() + 24 * 60 * 60 * 1000))
+            }
           />
         </motion.div>
 
@@ -175,7 +195,15 @@ const PricingSection = ({
 
         {/* FAQ Link */}
         <div className="mt-12 text-center">
-          <Button variant="link" className="text-primary">
+          <Button
+            variant="link"
+            className="text-primary"
+            onClick={() =>
+              document
+                .getElementById("faq-section")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+          >
             Have questions? Check our FAQ
           </Button>
         </div>

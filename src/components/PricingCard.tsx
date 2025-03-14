@@ -104,11 +104,23 @@ const PricingCard = ({
         <CardFooter className="pt-4">
           <Button
             onClick={onClick}
-            className="w-full"
+            className={`w-full relative overflow-hidden ${popular ? "animate-pulse-subtle" : ""}`}
             variant={popular ? "default" : "outline"}
             size="lg"
           >
-            {ctaText}
+            <span className="relative z-10">{ctaText}</span>
+            {popular && (
+              <motion.span
+                className="absolute inset-0 bg-primary/80 rounded-md"
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: [0.85, 1.05, 1], opacity: [0.3, 0.6, 0] }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 2,
+                  ease: "easeInOut",
+                }}
+              />
+            )}
           </Button>
         </CardFooter>
       </Card>

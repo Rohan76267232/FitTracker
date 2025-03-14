@@ -1,13 +1,16 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
-import { Switch } from "./ui/switch";
+import ThemeToggle from "./ThemeToggle";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Menu, X, Sun, Moon, ChevronDown } from "lucide-react";
+import { Menu, X, Sun, Moon, ChevronDown, LogIn } from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
+import UserProfileDropdown from "./auth/UserProfileDropdown";
 
 interface NavbarProps {
   logo?: string;
@@ -27,6 +30,8 @@ const Navbar = ({
 }: NavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const { isAuthenticated, user } = useAuth();
+  const navigate = useNavigate();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -40,9 +45,9 @@ const Navbar = ({
       <div className="container mx-auto px-4 h-20 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center">
-          <a href="/" className="text-2xl font-bold text-primary">
+          <Link to="/" className="text-2xl font-bold text-primary">
             {logo}
-          </a>
+          </Link>
         </div>
 
         {/* Desktop Navigation */}
@@ -60,15 +65,28 @@ const Navbar = ({
 
         {/* Theme Toggle and CTA */}
         <div className="hidden md:flex items-center space-x-4">
-          <div className="flex items-center space-x-2">
-            <Sun className="h-4 w-4 text-gray-500" />
-            <Switch checked={isDarkMode} onCheckedChange={handleThemeToggle} />
-            <Moon className="h-4 w-4 text-gray-500" />
-          </div>
+          <ThemeToggle onToggle={handleThemeToggle} />
 
-          <Button className="bg-primary hover:bg-primary/90 text-white font-medium rounded-full px-6 transition-all duration-300 hover:shadow-lg">
-            Get Started
-          </Button>
+          {isAuthenticated ? (
+            <UserProfileDropdown />
+          ) : (
+            <div className="flex items-center space-x-3">
+              <Button
+                variant="outline"
+                className="font-medium rounded-full px-6 transition-all duration-300 hover:shadow-sm"
+                onClick={() => navigate("/login")}
+              >
+                <LogIn className="mr-2 h-4 w-4" />
+                Sign In
+              </Button>
+              <Button
+                className="bg-primary hover:bg-primary/90 text-white font-medium rounded-full px-6 transition-all duration-300 hover:shadow-lg"
+                onClick={() => navigate("/register")}
+              >
+                Get Started
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -99,18 +117,35 @@ const Navbar = ({
             ))}
 
             <div className="flex items-center justify-between py-2">
-              <div className="flex items-center space-x-2">
-                <Sun className="h-4 w-4 text-gray-500" />
-                <Switch
-                  checked={isDarkMode}
-                  onCheckedChange={handleThemeToggle}
-                />
-                <Moon className="h-4 w-4 text-gray-500" />
-              </div>
+              <ThemeToggle onToggle={handleThemeToggle} />
 
-              <Button className="bg-primary hover:bg-primary/90 text-white font-medium rounded-full px-6 transition-all duration-300 hover:shadow-lg">
-                Get Started
-              </Button>
+              {isAuthenticated ? (
+                <UserProfileDropdown />
+              ) : (
+                <div className="flex items-center space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="font-medium rounded-full transition-all duration-300"
+                    onClick={() => {
+                      navigate("/login");
+                      setIsMenuOpen(false);
+                    }}
+                  >
+                    Sign In
+                  </Button>
+                  <Button
+                    size="sm"
+                    className="bg-primary hover:bg-primary/90 text-white font-medium rounded-full transition-all duration-300"
+                    onClick={() => {
+                      navigate("/register");
+                      setIsMenuOpen(false);
+                    }}
+                  >
+                    Get Started
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>

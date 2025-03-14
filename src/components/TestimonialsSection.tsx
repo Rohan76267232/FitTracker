@@ -4,6 +4,7 @@ import { Button } from "./ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import TransformationGallery from "./TransformationGallery";
 import VideoTestimonial from "./VideoTestimonial";
+import LiveUserCounter from "./LiveUserCounter";
 
 interface TestimonialsSectionProps {
   title?: string;
@@ -30,6 +31,7 @@ const TestimonialsSection = ({
       quote:
         "This app completely transformed my fitness journey. I've never felt better!",
       avatarSrc: "https://api.dicebear.com/7.x/avataaars/svg?seed=sarah",
+      rating: 5,
     },
     {
       id: "2",
@@ -43,6 +45,7 @@ const TestimonialsSection = ({
       quote:
         "The workout plans are amazing. I've seen results I never thought possible.",
       avatarSrc: "https://api.dicebear.com/7.x/avataaars/svg?seed=michael",
+      rating: 5,
     },
     {
       id: "3",
@@ -56,6 +59,7 @@ const TestimonialsSection = ({
       quote:
         "The meal planning feature was a game-changer for my weight loss journey.",
       avatarSrc: "https://api.dicebear.com/7.x/avataaars/svg?seed=emily",
+      rating: 4,
     },
   ];
 
@@ -120,11 +124,22 @@ const TestimonialsSection = ({
                   weightLost={testimonial.weightLost}
                   quote={testimonial.quote}
                   avatarSrc={testimonial.avatarSrc}
+                  rating={testimonial.rating}
                 />
               ))}
             </motion.div>
           </TabsContent>
         </Tabs>
+
+        <motion.div
+          className="mt-16 max-w-lg mx-auto"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <LiveUserCounter />
+        </motion.div>
 
         <motion.div
           className="mt-12 text-center"
@@ -136,8 +151,15 @@ const TestimonialsSection = ({
             Join thousands of satisfied users who have transformed their lives
             with our app.
           </p>
-          <Button size="lg" className="text-lg px-8 py-6">
-            Start Your Transformation Today
+          <Button
+            size="lg"
+            className="text-lg px-8 py-6 rounded-full relative overflow-hidden group"
+          >
+            <span className="relative z-10">
+              Start Your Transformation Today
+            </span>
+            <span className="absolute inset-0 bg-primary/80 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+            <span className="absolute inset-0 rounded-full animate-pulse bg-primary/20"></span>
           </Button>
         </motion.div>
       </div>
