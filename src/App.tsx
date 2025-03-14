@@ -7,6 +7,7 @@ import RegisterPage from "./pages/RegisterPage";
 import BlogPage from "./pages/BlogPage";
 import BlogPostPage from "./pages/BlogPostPage";
 import routes from "tempo-routes";
+import { Toaster } from "./components/ui/toaster";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/blog/:slug" element={<BlogPostPage />} />
           </Routes>
           {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}
+          <Toaster />
         </>
       </Suspense>
     </AuthProvider>
